@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Voting OSIS 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #19183B 0%, #708993 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .tab-active { background: #19183B; color: white; }
+        .tab-inactive { background: #F0F0F0; color: #708993; }
+        .primary-bg { background-color: #19183B; }
+        .secondary-bg { background-color: #708993; }
+        .accent-bg { background-color: #A1C2BD; }
+        .light-bg { background-color: #E7F2EF; }
+        .neutral-bg { background-color: #F0F0F0; }
+        .primary-text { color: #19183B; }
+        .secondary-text { color: #708993; }
+        .accent-text { color: #A1C2BD; }
+        .hover-primary:hover { background-color: #0f0e2a; }
+        .hover-secondary:hover { background-color: #5a6f7a; }
+        .hover-accent:hover { background-color: #8bb0aa; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full card-shadow">
+            <div class="text-center mb-6">
+                <!-- Logo Sekolah -->
+                <div class="mb-4">
+                    <img id="schoolLogo" src="" alt="Logo MA NU Demak" class="w-20 h-20 mx-auto rounded-full object-cover shadow-lg" style="display: none;" onerror="this.style.display='none'; document.getElementById('defaultLogo').style.display='flex';">
+                    <div id="defaultLogo" class="w-20 h-20 primary-bg rounded-full flex items-center justify-center mx-auto shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h4M9 7h6m-6 4h6m-2 5h2M7 7h2v2H7V7zm0 4h2v2H7v-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <h1 class="text-2xl font-bold primary-text mb-1">Admin Panel</h1>
+                <h2 class="text-lg font-semibold secondary-text mb-2">MA NU Demak</h2>
+                <p class="text-gray-600">Sistem Manajemen Voting OSIS</p>
+                
+                <!-- Tombol untuk mengganti logo -->
+                <button onclick="changeLogo()" class="mt-3 text-sm accent-text hover:text-gray-800 underline">
+                    📷 Ganti Logo Sekolah
+                </button>
+            </div>
+            
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium primary-text mb-2">Password Admin</label>
+                    <input type="password" id="adminPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Masukkan password admin">
+                </div>
+                
+                <button type="submit" class="w-full primary-bg text-white py-3 px-6 rounded-lg font-medium hover-primary transition-colors">
+                    🔐 Login Admin
+                </button>
+            </form>
+            
+            <div class="mt-6 p-4 light-bg rounded-lg">
+                <p class="text-sm primary-text font-medium mb-2">📱 Link Aplikasi Siswa:</p>
+                <button onclick="copyStudentAppLink()" class="w-full neutral-bg secondary-text py-2 px-4 rounded text-sm hover:bg-gray-200 transition-colors">
+                    📋 Copy Link Voting Siswa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div id="navigationTabs" class="hidden fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
+        <div class="flex justify-between items-center p-4">
+            <div class="flex space-x-2">
+                <button onclick="showTab('results')" id="resultsTab" class="px-4 py-2 rounded-lg font-medium transition-colors tab-active flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                    </svg>
+                    Hasil
+                </button>
+                <button onclick="showTab('tracking')" id="trackingTab" class="px-4 py-2 rounded-lg font-medium transition-colors tab-inactive flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 4C16.55 4 17 4.45 17 5V8.5C17 9.33 16.33 10 15.5 10C14.67 10 14 9.33 14 8.5V6H12V8.5C12 9.33 11.33 10 10.5 10C9.67 10 9 9.33 9 8.5V6H7V8.5C7 9.33 6.33 10 5.5 10C4.67 10 4 9.33 4 8.5V5C4 4.45 4.45 4 5 4H16ZM5 12H16C17.1 12 18 12.9 18 14V19C18 20.1 17.1 21 16 21H5C3.9 21 3 20.1 3 19V14C3 12.9 3.9 12 5 12Z"/>
+                    </svg>
+                    Tracking
+                </button>
+                <button onclick="showTab('candidates')" id="candidatesTab" class="px-4 py-2 rounded-lg font-medium transition-colors tab-inactive flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                    </svg>
+                    Kandidat
+                </button>
+                <button onclick="showTab('admin')" id="adminTab" class="px-4 py-2 rounded-lg font-medium transition-colors tab-inactive flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 15.5C10.07 15.5 8.32 14.92 6.88 13.93L5.05 15.76C7.16 17.87 9.95 19.16 13 19.16S18.84 17.87 20.95 15.76L19.12 13.93C17.68 14.92 15.93 15.5 12 15.5ZM21 10.78L19.17 8.95C17.45 10.19 15.28 10.89 13 10.89S8.55 10.19 6.83 8.95L5 10.78C7.13 12.91 9.91 14.11 13 14.11S18.87 12.91 21 10.78ZM12 8C14.76 8 17.2 9.15 18.95 11L20.78 9.17C18.32 6.71 15.32 5.28 12 5.28S5.68 6.71 3.22 9.17L5.05 11C6.8 9.15 9.24 8 12 8Z"/>
+                    </svg>
+                    Admin
+                </button>
+            </div>
+            <button onclick="logout()" class="px-4 py-2 secondary-bg text-white rounded-lg font-medium hover-secondary transition-colors flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.59L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"/>
+                </svg>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="mainApp" class="hidden pt-20">
+        <!-- Results Tab -->
+        <div id="resultsContent" class="min-h-screen p-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold primary-text flex items-center">
+                            <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                            </svg>
+                            Hasil Voting Real-time
+                        </h3>
+                        <button onclick="refreshData()" class="primary-bg text-white px-4 py-2 rounded-lg font-medium hover-primary transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 4V1L8 5L12 9V6C15.31 6 18 8.69 18 12C18 13.01 17.75 13.97 17.3 14.8L18.76 16.26C19.54 15.03 20 13.57 20 12C20 7.58 16.42 4 12 4ZM12 18C8.69 18 6 15.31 6 12C6 10.99 6.25 10.03 6.7 9.2L5.24 7.74C4.46 8.97 4 10.43 4 12C4 16.42 7.58 20 12 20V23L16 19L12 15V18Z"/>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="resultsContainer" class="space-y-6">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-6 p-4 neutral-bg rounded-lg">
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div>
+                                <p class="text-2xl font-bold primary-text" id="totalVotes">0</p>
+                                <p class="text-sm secondary-text">Total Suara</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold primary-text" id="participationRate">0%</p>
+                                <p class="text-sm secondary-text">Tingkat Partisipasi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tracking Tab -->
+        <div id="trackingContent" class="min-h-screen p-4 hidden">
+            <div class="max-w-4xl mx-auto">
+                <!-- Sudah Vote -->
+                <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold secondary-text flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
+                            </svg>
+                            Siswa yang Sudah Voting
+                        </h3>
+                        <span id="votedCount" class="light-bg secondary-text px-3 py-1 rounded-full text-sm font-medium">0 siswa</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <input type="text" id="searchVoted" placeholder="Cari nama siswa..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div id="votedList" class="space-y-2 max-h-96 overflow-y-auto">
+                        <p class="text-gray-500 text-center py-8">Belum ada yang voting</p>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h3 class="text-xl font-bold primary-text mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 6L18.29 8.29L13.41 13.17L9.41 9.17L2 16.59L3.41 18L9.41 12L13.41 16L20.29 9.12L22 10.83V6H16Z"/>
+                        </svg>
+                        Statistik Partisipasi per Kelas
+                    </h3>
+                    <div id="classStats" class="grid md:grid-cols-3 gap-4">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Candidates Tab -->
+        <div id="candidatesContent" class="min-h-screen p-4 hidden">
+            <div class="max-w-6xl mx-auto">
+                <div class="bg-white rounded-2xl p-6 card-shadow mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold primary-text flex items-center">
+                            <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                            </svg>
+                            Manajemen Kandidat
+                        </h3>
+                        <button onclick="showAddCandidateForm()" class="primary-bg text-white px-4 py-2 rounded-lg font-medium hover-primary transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                            </svg>
+                            Tambah Kandidat
+                        </button>
+                    </div>
+
+                    <!-- Add/Edit Candidate Form -->
+                    <div id="candidateForm" class="hidden mb-6 p-6 neutral-bg rounded-lg">
+                        <h4 class="text-lg font-semibold primary-text mb-4" id="formTitle">Tambah Kandidat Baru</h4>
+                        <form onsubmit="saveCandidateData(event)" class="space-y-4">
+                            <input type="hidden" id="editCandidateId" value="">
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium primary-text mb-2">Nama Lengkap *</label>
+                                    <input type="text" id="candidateName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Nama lengkap kandidat">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium primary-text mb-2">Nomor Urut *</label>
+                                    <select id="candidateNumber" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="">Pilih Nomor</option>
+                                        <option value="1">Kandidat #1</option>
+                                        <option value="2">Kandidat #2</option>
+                                        <option value="3">Kandidat #3</option>
+                                        <option value="4">Kandidat #4</option>
+                                        <option value="5">Kandidat #5</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium primary-text mb-2">Kelas</label>
+                                    <input type="text" id="candidateClass" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Contoh: XI-IPA-1">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium primary-text mb-2">Warna Tema</label>
+                                    <select id="candidateColor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="primary">Biru Tua (#19183B)</option>
+                                        <option value="secondary">Abu-abu Biru (#708993)</option>
+                                        <option value="accent">Hijau Mint (#A1C2BD)</option>
+                                        <option value="light">Hijau Muda (#E7F2EF)</option>
+                                        <option value="neutral">Abu-abu Terang (#F0F0F0)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium primary-text mb-2">Visi *</label>
+                                <textarea id="candidateVision" required rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Tuliskan visi kandidat..."></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium primary-text mb-2">Misi * (Pisahkan dengan enter untuk setiap poin)</label>
+                                <textarea id="candidateMission" required rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="• Misi pertama&#10;• Misi kedua&#10;• Misi ketiga"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium primary-text mb-2">Foto Profil (URL)</label>
+                                <input type="url" id="candidatePhoto" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://example.com/photo.jpg (opsional)">
+                                <p class="text-xs text-gray-500 mt-1">Kosongkan jika ingin menggunakan inisial nama</p>
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <button type="submit" class="primary-bg text-white px-6 py-2 rounded-lg font-medium hover-primary transition-colors">
+                                    💾 Simpan Kandidat
+                                </button>
+                                <button type="button" onclick="cancelCandidateForm()" class="bg-gray-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors">
+                                    ❌ Batal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Candidates List -->
+                    <div id="candidatesList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="adminContent" class="min-h-screen p-4 hidden">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h3 class="text-2xl font-bold primary-text mb-6 flex items-center">
+                        <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 15.5C10.07 15.5 8.32 14.92 6.88 13.93L5.05 15.76C7.16 17.87 9.95 19.16 13 19.16S18.84 17.87 20.95 15.76L19.12 13.93C17.68 14.92 15.93 15.5 12 15.5ZM21 10.78L19.17 8.95C17.45 10.19 15.28 10.89 13 10.89S8.55 10.19 6.83 8.95L5 10.78C7.13 12.91 9.91 14.11 13 14.11S18.87 12.91 21 10.78ZM12 8C14.76 8 17.2 9.15 18.95 11L20.78 9.17C18.32 6.71 15.32 5.28 12 5.28S5.68 6.71 3.22 9.17L5.05 11C6.8 9.15 9.24 8 12 8Z"/>
+                        </svg>
+                        Panel Admin
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Export Data -->
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-semibold secondary-text">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM8 12V14H16V12H8ZM8 16V18H13V16H8Z"/>
+                                </svg>
+                                Export Data
+                            </h4>
+                            
+                            <button onclick="exportVotingData()" class="w-full primary-bg text-white py-3 px-4 rounded-lg font-medium hover-primary transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20ZM16 11H13V16H16V11ZM12 11H8V13H12V11ZM8 14H12V16H8V14Z"/>
+                                </svg>
+                                Export Data Voting (CSV)
+                            </button>
+                            
+                            <button onclick="exportStudentList()" class="w-full secondary-bg text-white py-3 px-4 rounded-lg font-medium hover-secondary transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 4C16.55 4 17 4.45 17 5V8.5C17 9.33 16.33 10 15.5 10C14.67 10 14 9.33 14 8.5V6H12V8.5C12 9.33 11.33 10 10.5 10C9.67 10 9 9.33 9 8.5V6H7V8.5C7 9.33 6.33 10 5.5 10C4.67 10 4 9.33 4 8.5V5C4 4.45 4.45 4 5 4H16ZM5 12H16C17.1 12 18 12.9 18 14V19C18 20.1 17.1 21 16 21H5C3.9 21 3 20.1 3 19V14C3 12.9 3.9 12 5 12Z"/>
+                                </svg>
+                                Export Daftar Siswa (CSV)
+                            </button>
+                            
+                            <button onclick="exportSummaryReport()" class="w-full accent-bg text-white py-3 px-4 rounded-lg font-medium hover-accent transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 12H7V10H17V12ZM13 16H7V14H13V16ZM17 8H7V6H17V8Z"/>
+                                </svg>
+                                Export Laporan Lengkap (TXT)
+                            </button>
+                        </div>
+
+                        <!-- Reset & Management -->
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-semibold secondary-text">
+                                <svg class="w-5 h-5 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H11V21H5V3H13V9H21ZM14 15.5L22.5 7L21 5.5L14 12.5L10.5 9L9 10.5L14 15.5ZM19 13V19H13V21H19C20.11 21 21 20.11 21 19V13H19Z"/>
+                                </svg>
+                                Manajemen Data
+                            </h4>
+                            
+                            <button onclick="addSampleStudents()" class="w-full accent-bg text-white py-3 px-4 rounded-lg font-medium hover-accent transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 4C16.55 4 17 4.45 17 5V8.5C17 9.33 16.33 10 15.5 10C14.67 10 14 9.33 14 8.5V6H12V8.5C12 9.33 11.33 10 10.5 10C9.67 10 9 9.33 9 8.5V6H7V8.5C7 9.33 6.33 10 5.5 10C4.67 10 4 9.33 4 8.5V5C4 4.45 4.45 4 5 4H16ZM5 12H16C17.1 12 18 12.9 18 14V19C18 20.1 17.1 21 16 21H5C3.9 21 3 20.1 3 19V14C3 12.9 3.9 12 5 12ZM19 14V19H21V14H19ZM22 12V21H20V12H22Z"/>
+                                </svg>
+                                Tambah Data Siswa Sample
+                            </button>
+                            
+                            <button onclick="resetVotingData()" class="w-full secondary-bg text-white py-3 px-4 rounded-lg font-medium hover-secondary transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 4V1L8 5L12 9V6C15.31 6 18 8.69 18 12C18 13.01 17.75 13.97 17.3 14.8L18.76 16.26C19.54 15.03 20 13.57 20 12C20 7.58 16.42 4 12 4ZM12 18C8.69 18 6 15.31 6 12C6 10.99 6.25 10.03 6.7 9.2L5.24 7.74C4.46 8.97 4 10.43 4 12C4 16.42 7.58 20 12 20V23L16 19L12 15V18Z"/>
+                                </svg>
+                                Reset Semua Data Voting
+                            </button>
+                            
+                            <button onclick="resetAllData()" class="w-full primary-bg text-white py-3 px-4 rounded-lg font-medium hover-primary transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.4 15.6 20 13.9 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z"/>
+                                </svg>
+                                Reset Semua Data (Termasuk Siswa)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- System Info -->
+                    <div class="mt-6 p-4 neutral-bg rounded-lg">
+                        <h4 class="font-semibold primary-text mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11 9H13V7H11M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 17H13V11H11V17Z"/>
+                            </svg>
+                            Informasi Sistem
+                        </h4>
+                        <div class="grid md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <p class="secondary-text">Total Data Voting:</p>
+                                <p id="systemVoteCount" class="font-bold primary-text">0 records</p>
+                            </div>
+                            <div>
+                                <p class="secondary-text">Database Siswa:</p>
+                                <p id="systemStudentCount" class="font-bold primary-text">0 records</p>
+                            </div>
+                            <div>
+                                <p class="secondary-text">Last Update:</p>
+                                <p id="lastUpdate" class="font-bold primary-text">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student App Link -->
+                    <div class="mt-6 p-4 light-bg rounded-lg">
+                        <h4 class="font-semibold primary-text mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 7H22V17H17V19C17 19.55 16.55 20 16 20H2C1.45 20 1 19.55 1 19V5C1 4.45 1.45 4 2 4H16C16.55 4 17 4.45 17 5V7ZM15 6H3V18H15V6ZM19 9V15H17V9H19ZM8 8H14V10H8V8ZM8 11H14V13H8V11ZM8 14H11V16H8V14Z"/>
+                            </svg>
+                            Link Aplikasi Siswa
+                        </h4>
+                        <div class="flex space-x-2">
+                            <input type="text" id="studentAppUrl" readonly class="flex-1 px-3 py-2 bg-white border border-gray-200 rounded text-sm" value="">
+                            <button onclick="copyStudentAppLink()" class="primary-bg text-white px-4 py-2 rounded font-medium hover-primary transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/>
+                                </svg>
+                                Copy
+                            </button>
+                        </div>
+                        <p class="text-xs secondary-text mt-2">Bagikan link ini kepada siswa untuk melakukan voting</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let voteCounts = JSON.parse(localStorage.getItem('voteCounts') || '{"1": 0, "2": 0, "3": 0}');
+        let candidateNames = {1: 'Ahmad Rizki', 2: 'Sari Putri', 3: 'Doni Firmansyah'};
+        let votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
+        let votingData = JSON.parse(localStorage.getItem('votingData') || '[]');
+        let masterStudents = JSON.parse(localStorage.getItem('masterStudents') || '[]');
+        
+        // Candidate management
+        let candidatesData = JSON.parse(localStorage.getItem('candidatesData') || JSON.stringify([
+            {
+                id: 1,
+                name: 'Ahmad Rizki',
+                class: 'XI-IPA-1',
+                vision: 'Mewujudkan OSIS yang inovatif, kreatif, dan berprestasi untuk kemajuan sekolah.',
+                mission: ['Meningkatkan kegiatan ekstrakurikuler', 'Mengadakan event kreatif bulanan', 'Memperkuat komunikasi antar siswa'],
+                color: 'primary',
+                photo: ''
+            },
+            {
+                id: 2,
+                name: 'Sari Putri',
+                class: 'XI-IPS-1',
+                vision: 'Membangun OSIS yang peduli lingkungan dan mengutamakan kesejahteraan siswa.',
+                mission: ['Program sekolah hijau', 'Kantin sehat dan terjangkau', 'Fasilitas belajar yang nyaman'],
+                color: 'secondary',
+                photo: ''
+            },
+            {
+                id: 3,
+                name: 'Doni Firmansyah',
+                class: 'XII-IPA-2',
+                vision: 'OSIS yang modern, teknologi-savvy, dan siap menghadapi tantangan masa depan.',
+                mission: ['Digitalisasi kegiatan OSIS', 'Workshop teknologi rutin', 'Kompetisi coding dan robotik'],
+                color: 'accent',
+                photo: ''
+            }
+        ]));
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCandidateNames();
+            loadSchoolLogo();
+            generateStudentAppLink();
+            
+            // Auto refresh data every 5 seconds
+            setInterval(refreshData, 5000);
+        });
+
+        // Logo management functions
+        function loadSchoolLogo() {
+            const savedLogo = localStorage.getItem('schoolLogo');
+            if (savedLogo) {
+                document.getElementById('schoolLogo').src = savedLogo;
+                document.getElementById('schoolLogo').style.display = 'block';
+                document.getElementById('defaultLogo').style.display = 'none';
+            }
+        }
+
+        function changeLogo() {
+            const logoUrl = prompt('Masukkan URL logo sekolah MA NU Demak:\n\n(Contoh: https://example.com/logo.png)\n\nKosongkan untuk menggunakan logo default');
+            
+            if (logoUrl === null) return; // User cancelled
+            
+            if (logoUrl.trim() === '') {
+                // Reset to default logo
+                localStorage.removeItem('schoolLogo');
+                document.getElementById('schoolLogo').style.display = 'none';
+                document.getElementById('defaultLogo').style.display = 'flex';
+                alert('✅ Logo berhasil direset ke default!');
+            } else {
+                // Test if URL is valid
+                const testImg = new Image();
+                testImg.onload = function() {
+                    localStorage.setItem('schoolLogo', logoUrl);
+                    document.getElementById('schoolLogo').src = logoUrl;
+                    document.getElementById('schoolLogo').style.display = 'block';
+                    document.getElementById('defaultLogo').style.display = 'none';
+                    alert('✅ Logo sekolah berhasil diperbarui!');
+                };
+                testImg.onerror = function() {
+                    alert('❌ URL logo tidak valid atau tidak dapat diakses.\n\nPastikan:\n- URL dimulai dengan https://\n- File adalah gambar (jpg, png, gif)\n- URL dapat diakses publik');
+                };
+                testImg.src = logoUrl;
+            }
+        }
+
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === 'manudemak') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('navigationTabs').classList.remove('hidden');
+                
+                updateAllDisplays();
+                showTab('results');
+            } else {
+                alert('❌ Password salah!\n\nGunakan password: manudemak');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        function logout() {
+            if (confirm('Yakin ingin logout dari admin panel?')) {
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('hidden');
+                document.getElementById('navigationTabs').classList.add('hidden');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all content
+            document.getElementById('resultsContent').classList.add('hidden');
+            document.getElementById('trackingContent').classList.add('hidden');
+            document.getElementById('candidatesContent').classList.add('hidden');
+            document.getElementById('adminContent').classList.add('hidden');
+            
+            // Reset tab styles
+            document.querySelectorAll('[id$="Tab"]').forEach(tab => {
+                tab.className = tab.className.replace('tab-active', 'tab-inactive');
+            });
+            
+            // Show selected content and activate tab
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+            document.getElementById(tabName + 'Tab').className = document.getElementById(tabName + 'Tab').className.replace('tab-inactive', 'tab-active');
+            
+            // Update displays when switching tabs
+            if (tabName === 'tracking') {
+                updateTrackingDisplay();
+            } else if (tabName === 'admin') {
+                updateSystemInfo();
+            } else if (tabName === 'candidates') {
+                renderCandidatesList();
+            } else if (tabName === 'results') {
+                updateVoteDisplay();
+            }
+        }
+
+        function refreshData() {
+            // Reload data from localStorage
+            voteCounts = JSON.parse(localStorage.getItem('voteCounts') || '{"1": 0, "2": 0, "3": 0}');
+            votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
+            votingData = JSON.parse(localStorage.getItem('votingData') || '[]');
+            masterStudents = JSON.parse(localStorage.getItem('masterStudents') || '[]');
+            candidatesData = JSON.parse(localStorage.getItem('candidatesData') || '[]');
+            
+            updateCandidateNames();
+            updateAllDisplays();
+        }
+
+        // Candidate Management Functions
+        function updateCandidateNames() {
+            candidateNames = {};
+            candidatesData.forEach(candidate => {
+                candidateNames[candidate.id] = candidate.name;
+            });
+        }
+
+        function getColorClasses(color) {
+            const colorMap = {
+                primary: { 
+                    bg: 'primary-bg', 
+                    hover: 'hover-primary', 
+                    light: 'bg-gray-100', 
+                    text: 'primary-text', 
+                    gradient: 'from-gray-700 to-gray-900',
+                    bgColor: '#19183B'
+                },
+                secondary: { 
+                    bg: 'secondary-bg', 
+                    hover: 'hover-secondary', 
+                    light: 'bg-gray-100', 
+                    text: 'secondary-text', 
+                    gradient: 'from-gray-500 to-gray-700',
+                    bgColor: '#708993'
+                },
+                accent: { 
+                    bg: 'accent-bg', 
+                    hover: 'hover-accent', 
+                    light: 'light-bg', 
+                    text: 'accent-text', 
+                    gradient: 'from-teal-400 to-teal-600',
+                    bgColor: '#A1C2BD'
+                },
+                light: { 
+                    bg: 'light-bg', 
+                    hover: 'hover:bg-green-100', 
+                    light: 'light-bg', 
+                    text: 'text-green-700', 
+                    gradient: 'from-green-200 to-green-400',
+                    bgColor: '#E7F2EF'
+                },
+                neutral: { 
+                    bg: 'neutral-bg', 
+                    hover: 'hover:bg-gray-200', 
+                    light: 'neutral-bg', 
+                    text: 'text-gray-700', 
+                    gradient: 'from-gray-300 to-gray-500',
+                    bgColor: '#F0F0F0'
+                }
+            };
+            return colorMap[color] || colorMap.primary;
+        }
+
+        function renderCandidatesList() {
+            const candidatesList = document.getElementById('candidatesList');
+            candidatesList.innerHTML = '';
+            
+            if (candidatesData.length === 0) {
+                candidatesList.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-full">Belum ada kandidat yang ditambahkan</p>';
+                return;
+            }
+            
+            candidatesData.forEach(candidate => {
+                const colors = getColorClasses(candidate.color);
+                const initials = candidate.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                
+                const candidateDiv = document.createElement('div');
+                candidateDiv.className = 'bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow';
+                
+                candidateDiv.innerHTML = `
+                    <div class="flex items-center space-x-3 mb-3">
+                        ${candidate.photo ? 
+                            `<img src="${candidate.photo}" alt="${candidate.name}" class="w-12 h-12 rounded-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             <div class="w-12 h-12 bg-gradient-to-br ${colors.gradient} rounded-full flex items-center justify-center" style="display: none; background-color: ${colors.bgColor};">
+                                <span class="text-sm font-bold text-white">${initials}</span>
+                             </div>` :
+                            `<div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: ${colors.bgColor};">
+                                <span class="text-sm font-bold text-white">${initials}</span>
+                             </div>`
+                        }
+                        <div>
+                            <h4 class="font-semibold primary-text">${candidate.name}</h4>
+                            <p class="text-sm ${colors.text}">Kandidat #${candidate.id}</p>
+                            ${candidate.class ? `<p class="text-xs text-gray-500">${candidate.class}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 mb-3">
+                        <p class="font-medium mb-1">Visi:</p>
+                        <p class="text-xs">${candidate.vision.substring(0, 100)}${candidate.vision.length > 100 ? '...' : ''}</p>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="editCandidate(${candidate.id})" class="flex-1 bg-blue-100 text-blue-700 py-1 px-3 rounded text-sm font-medium hover:bg-blue-200 transition-colors">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="deleteCandidate(${candidate.id})" class="flex-1 bg-red-100 text-red-700 py-1 px-3 rounded text-sm font-medium hover:bg-red-200 transition-colors">
+                            🗑️ Hapus
+                        </button>
+                    </div>
+                `;
+                
+                candidatesList.appendChild(candidateDiv);
+            });
+        }
+
+        function showAddCandidateForm() {
+            document.getElementById('candidateForm').classList.remove('hidden');
+            document.getElementById('formTitle').textContent = 'Tambah Kandidat Baru';
+            document.getElementById('editCandidateId').value = '';
+            
+            // Reset form
+            document.getElementById('candidateName').value = '';
+            document.getElementById('candidateNumber').value = '';
+            document.getElementById('candidateClass').value = '';
+            document.getElementById('candidateColor').value = 'primary';
+            document.getElementById('candidateVision').value = '';
+            document.getElementById('candidateMission').value = '';
+            document.getElementById('candidatePhoto').value = '';
+        }
+
+        function editCandidate(candidateId) {
+            const candidate = candidatesData.find(c => c.id === candidateId);
+            if (!candidate) return;
+            
+            document.getElementById('candidateForm').classList.remove('hidden');
+            document.getElementById('formTitle').textContent = 'Edit Kandidat';
+            document.getElementById('editCandidateId').value = candidateId;
+            
+            // Fill form with candidate data
+            document.getElementById('candidateName').value = candidate.name;
+            document.getElementById('candidateNumber').value = candidate.id;
+            document.getElementById('candidateClass').value = candidate.class || '';
+            document.getElementById('candidateColor').value = candidate.color;
+            document.getElementById('candidateVision').value = candidate.vision;
+            document.getElementById('candidateMission').value = candidate.mission.join('\n');
+            document.getElementById('candidatePhoto').value = candidate.photo || '';
+        }
+
+        function saveCandidateData(event) {
+            event.preventDefault();
+            
+            const editId = document.getElementById('editCandidateId').value;
+            const name = document.getElementById('candidateName').value;
+            const number = parseInt(document.getElementById('candidateNumber').value);
+            const candidateClass = document.getElementById('candidateClass').value;
+            const color = document.getElementById('candidateColor').value;
+            const vision = document.getElementById('candidateVision').value;
+            const missionText = document.getElementById('candidateMission').value;
+            const photo = document.getElementById('candidatePhoto').value;
+            
+            // Parse mission
+            const mission = missionText.split('\n').filter(m => m.trim()).map(m => m.replace(/^[•\-\*]\s*/, ''));
+            
+            // Check if number is already used (except for current candidate being edited)
+            const existingCandidate = candidatesData.find(c => c.id === number && c.id != editId);
+            if (existingCandidate) {
+                alert('Nomor urut sudah digunakan oleh kandidat lain!');
+                return;
+            }
+            
+            const candidateData = {
+                id: number,
+                name: name,
+                class: candidateClass,
+                vision: vision,
+                mission: mission,
+                color: color,
+                photo: photo
+            };
+            
+            if (editId) {
+                // Edit existing candidate
+                const index = candidatesData.findIndex(c => c.id == editId);
+                if (index !== -1) {
+                    // If ID changed, update vote counts
+                    if (candidatesData[index].id !== number) {
+                        if (voteCounts[candidatesData[index].id]) {
+                            voteCounts[number] = voteCounts[candidatesData[index].id];
+                            delete voteCounts[candidatesData[index].id];
+                        }
+                        
+                        // Update voting data
+                        votingData.forEach(vote => {
+                            if (vote.candidateId == candidatesData[index].id) {
+                                vote.candidateId = number;
+                                vote.candidateName = name;
+                            }
+                        });
+                    }
+                    
+                    candidatesData[index] = candidateData;
+                }
+            } else {
+                // Add new candidate
+                candidatesData.push(candidateData);
+                if (!voteCounts[number]) {
+                    voteCounts[number] = 0;
+                }
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('candidatesData', JSON.stringify(candidatesData));
+            localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+            localStorage.setItem('votingData', JSON.stringify(votingData));
+            
+            // Update displays
+            updateCandidateNames();
+            renderCandidatesList();
+            updateVoteDisplay();
+            
+            // Hide form
+            cancelCandidateForm();
+            
+            alert('✅ Data kandidat berhasil disimpan!');
+        }
+
+        function deleteCandidate(candidateId) {
+            const candidate = candidatesData.find(c => c.id === candidateId);
+            if (!candidate) return;
+            
+            if (confirm(`⚠️ Apakah Anda yakin ingin menghapus kandidat "${candidate.name}"?\n\nTindakan ini akan:\n- Menghapus data kandidat\n- Menghapus semua suara untuk kandidat ini\n- Tidak dapat dibatalkan`)) {
+                // Remove candidate
+                candidatesData = candidatesData.filter(c => c.id !== candidateId);
+                
+                // Remove votes for this candidate
+                votingData = votingData.filter(vote => vote.candidateId != candidateId);
+                delete voteCounts[candidateId];
+                
+                // Update voted users (remove those who voted for deleted candidate)
+                const deletedVoters = votingData.filter(vote => vote.candidateId == candidateId).map(vote => vote.studentId);
+                votedUsers = votedUsers.filter(userId => !deletedVoters.includes(userId));
+                
+                // Update master students
+                masterStudents.forEach(student => {
+                    if (student.votedFor === candidate.name) {
+                        student.hasVoted = false;
+                        delete student.votedFor;
+                        delete student.voteTime;
+                    }
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('candidatesData', JSON.stringify(candidatesData));
+                localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+                localStorage.setItem('votingData', JSON.stringify(votingData));
+                localStorage.setItem('votedUsers', JSON.stringify(votedUsers));
+                localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+                
+                // Update displays
+                updateCandidateNames();
+                renderCandidatesList();
+                updateAllDisplays();
+                
+                alert('✅ Kandidat berhasil dihapus!');
+            }
+        }
+
+        function cancelCandidateForm() {
+            document.getElementById('candidateForm').classList.add('hidden');
+        }
+
+        function updateAllDisplays() {
+            updateVoteDisplay();
+            updateTrackingDisplay();
+            updateSystemInfo();
+        }
+
+        function updateVoteDisplay() {
+            const total = Object.values(voteCounts).reduce((a, b) => a + b, 0);
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            // Clear and rebuild results
+            resultsContainer.innerHTML = '';
+            
+            candidatesData.forEach(candidate => {
+                const colors = getColorClasses(candidate.color);
+                const votes = voteCounts[candidate.id] || 0;
+                const percentage = total > 0 ? (votes / total) * 100 : 0;
+                const initials = candidate.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `flex items-center justify-between p-4 ${colors.light} rounded-lg`;
+                
+                resultDiv.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: ${colors.bgColor};">
+                            <span class="text-white font-bold">${initials}</span>
+                        </div>
+                        <span class="font-medium text-lg primary-text">${candidate.name}</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-48 bg-gray-200 rounded-full h-4">
+                            <div class="h-4 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${colors.bgColor};"></div>
+                        </div>
+                        <span class="font-bold text-lg min-w-[80px] ${colors.text}">${votes} suara</span>
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(resultDiv);
+            });
+            
+            document.getElementById('totalVotes').textContent = total;
+            
+            // Update participation rate
+            const totalStudents = masterStudents.length;
+            const participationRate = totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0;
+            document.getElementById('participationRate').textContent = participationRate + '%';
+        }
+
+        function updateTrackingDisplay() {
+            const votedList = document.getElementById('votedList');
+            
+            // Clear list
+            votedList.innerHTML = '';
+            
+            const votedStudents = masterStudents.filter(s => s.hasVoted);
+            
+            // Update count
+            document.getElementById('votedCount').textContent = `${votedStudents.length} siswa`;
+            
+            // Populate voted list
+            if (votedStudents.length === 0) {
+                votedList.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada yang voting</p>';
+            } else {
+                votedStudents.forEach(student => {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 light-bg rounded-lg border border-gray-200';
+                    div.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-medium primary-text">${student.name}</p>
+                                <p class="text-sm secondary-text">${student.id} • ${student.class}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-medium secondary-text">${student.votedFor || 'N/A'}</p>
+                                <p class="text-xs text-gray-500">${student.voteTime || 'N/A'}</p>
+                            </div>
+                        </div>
+                    `;
+                    votedList.appendChild(div);
+                });
+            }
+            
+            // Update class statistics
+            updateClassStats();
+        }
+
+        function updateClassStats() {
+            const classStats = {};
+            
+            masterStudents.forEach(student => {
+                if (!classStats[student.class]) {
+                    classStats[student.class] = { total: 0, voted: 0 };
+                }
+                classStats[student.class].total++;
+                if (student.hasVoted) {
+                    classStats[student.class].voted++;
+                }
+            });
+            
+            const classStatsContainer = document.getElementById('classStats');
+            classStatsContainer.innerHTML = '';
+            
+            Object.keys(classStats).forEach(className => {
+                const stats = classStats[className];
+                const percentage = stats.total > 0 ? Math.round((stats.voted / stats.total) * 100) : 0;
+                
+                const div = document.createElement('div');
+                div.className = 'p-4 neutral-bg rounded-lg';
+                div.innerHTML = `
+                    <h4 class="font-semibold primary-text">${className}</h4>
+                    <p class="text-2xl font-bold secondary-text">${percentage}%</p>
+                    <p class="text-sm text-gray-600">${stats.voted}/${stats.total} siswa</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div class="h-2 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: #708993;"></div>
+                    </div>
+                `;
+                classStatsContainer.appendChild(div);
+            });
+        }
+
+        function updateSystemInfo() {
+            document.getElementById('systemVoteCount').textContent = `${votingData.length} records`;
+            document.getElementById('systemStudentCount').textContent = `${masterStudents.length} records`;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('id-ID');
+        }
+
+        // Admin functions
+        function addSampleStudents() {
+            if (confirm('Tambah data siswa sample untuk testing?')) {
+                const sampleStudents = [
+                    {id: '2024001', name: 'Ahmad Budi Santoso', class: 'X-A', hasVoted: false},
+                    {id: '2024002', name: 'Siti Aisyah Putri', class: 'X-B', hasVoted: false},
+                    {id: '2024003', name: 'Rudi Hermawan', class: 'XI-IPA-1', hasVoted: false},
+                    {id: '2024004', name: 'Maya Sari', class: 'XI-IPA-2', hasVoted: false},
+                    {id: '2024005', name: 'Dedi Kurniawan', class: 'XI-IPS-1', hasVoted: false},
+                    {id: '2024006', name: 'Rina Wati', class: 'XII-IPA-1', hasVoted: false},
+                    {id: '2024007', name: 'Budi Setiawan', class: 'XII-IPS-1', hasVoted: false},
+                    {id: '2024008', name: 'Dewi Lestari', class: 'X-C', hasVoted: false},
+                    {id: '2024009', name: 'Andi Pratama', class: 'XI-IPS-2', hasVoted: false},
+                    {id: '2024010', name: 'Sari Indah', class: 'XII-IPA-2', hasVoted: false}
+                ];
+                
+                sampleStudents.forEach(student => {
+                    if (!masterStudents.find(s => s.id === student.id)) {
+                        masterStudents.push(student);
+                    }
+                });
+                
+                localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+                updateAllDisplays();
+                alert('✅ Data siswa sample berhasil ditambahkan!');
+            }
+        }
+
+        function exportVotingData() {
+            if (votingData.length === 0) {
+                alert('Tidak ada data voting untuk diexport.');
+                return;
+            }
+            
+            let csv = 'Timestamp,ID Siswa,Nama Siswa,Kelas,ID Kandidat,Nama Kandidat\n';
+            votingData.forEach(vote => {
+                csv += `"${vote.timestamp}","${vote.studentId}","${vote.studentName}","${vote.studentClass}","${vote.candidateId}","${vote.candidateName}"\n`;
+            });
+            
+            downloadFile(csv, 'data-voting-osis-2024.csv', 'text/csv');
+        }
+
+        function exportStudentList() {
+            if (masterStudents.length === 0) {
+                alert('Tidak ada data siswa untuk diexport.');
+                return;
+            }
+            
+            let csv = 'ID Siswa,Nama Lengkap,Kelas,Status Vote,Pilihan,Waktu Vote\n';
+            masterStudents.forEach(student => {
+                csv += `"${student.id}","${student.name}","${student.class}","${student.hasVoted ? 'SUDAH' : 'BELUM'}","${student.votedFor || '-'}","${student.voteTime || '-'}"\n`;
+            });
+            
+            downloadFile(csv, 'daftar-siswa-osis-2024.csv', 'text/csv');
+        }
+
+        function exportSummaryReport() {
+            const total = Object.values(voteCounts).reduce((a, b) => a + b, 0);
+            const totalStudents = masterStudents.length;
+            const participationRate = totalStudents > 0 ? ((total / totalStudents) * 100).toFixed(2) : 0;
+            
+            let report = `LAPORAN VOTING OSIS 2024 - MA NU DEMAK\n`;
+            report += `Generated: ${new Date().toLocaleString('id-ID')}\n\n`;
+            report += `=== RINGKASAN HASIL ===\n`;
+            report += `Total Siswa Terdaftar: ${totalStudents}\n`;
+            report += `Total yang Sudah Vote: ${total}\n`;
+            report += `Tingkat Partisipasi: ${participationRate}%\n\n`;
+            report += `=== HASIL PER KANDIDAT ===\n`;
+            
+            candidatesData.forEach(candidate => {
+                const votes = voteCounts[candidate.id] || 0;
+                const percentage = total > 0 ? ((votes/total)*100).toFixed(1) : 0;
+                report += `${candidate.id}. ${candidate.name}: ${votes} suara (${percentage}%)\n`;
+            });
+            
+            // Class statistics
+            const classStats = {};
+            masterStudents.forEach(student => {
+                if (!classStats[student.class]) {
+                    classStats[student.class] = { total: 0, voted: 0 };
+                }
+                classStats[student.class].total++;
+                if (student.hasVoted) {
+                    classStats[student.class].voted++;
+                }
+            });
+            
+            report += `\n=== PARTISIPASI PER KELAS ===\n`;
+            Object.keys(classStats).forEach(className => {
+                const stats = classStats[className];
+                const percentage = stats.total > 0 ? ((stats.voted / stats.total) * 100).toFixed(1) : 0;
+                report += `${className}: ${stats.voted}/${stats.total} (${percentage}%)\n`;
+            });
+            
+            downloadFile(report, 'laporan-voting-osis-2024.txt', 'text/plain');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function resetVotingData() {
+            if (confirm('⚠️ PERINGATAN!\n\nApakah Anda yakin ingin menghapus semua data voting?\n\nTindakan ini akan:\n- Menghapus semua suara\n- Reset status voting siswa\n- Mengizinkan semua siswa voting ulang\n- Tidak dapat dibatalkan')) {
+                // Reset vote counts for all candidates
+                candidatesData.forEach(candidate => {
+                    voteCounts[candidate.id] = 0;
+                });
+                
+                votedUsers = [];
+                votingData = [];
+                
+                // Reset student vote status
+                masterStudents.forEach(student => {
+                    student.hasVoted = false;
+                    delete student.votedFor;
+                    delete student.voteTime;
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+                localStorage.setItem('votedUsers', JSON.stringify(votedUsers));
+                localStorage.setItem('votingData', JSON.stringify(votingData));
+                localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+                
+                updateAllDisplays();
+                alert('✅ Data voting berhasil direset!\n\nSemua siswa sekarang dapat melakukan voting kembali.');
+            }
+        }
+
+        function resetAllData() {
+            if (confirm('⚠️ PERINGATAN KERAS!\n\nApakah Anda yakin ingin menghapus SEMUA data termasuk database siswa?\n\nTindakan ini akan:\n- Menghapus semua data voting\n- Menghapus semua data siswa\n- Reset aplikasi ke kondisi awal\n- TIDAK DAPAT DIBATALKAN\n\nKetik "RESET" untuk konfirmasi:')) {
+                const confirmation = prompt('Ketik "RESET" untuk konfirmasi:');
+                if (confirmation === 'RESET') {
+                    // Clear all data except candidates and logo
+                    const savedLogo = localStorage.getItem('schoolLogo');
+                    const savedCandidates = localStorage.getItem('candidatesData');
+                    
+                    localStorage.clear();
+                    
+                    // Restore logo and candidates
+                    if (savedLogo) localStorage.setItem('schoolLogo', savedLogo);
+                    if (savedCandidates) localStorage.setItem('candidatesData', savedCandidates);
+                    
+                    // Reset variables
+                    voteCounts = {};
+                    candidatesData.forEach(candidate => {
+                        voteCounts[candidate.id] = 0;
+                    });
+                    localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+                    
+                    votedUsers = [];
+                    votingData = [];
+                    masterStudents = [];
+                    
+                    updateAllDisplays();
+                    alert('✅ Semua data berhasil dihapus!\n\nAplikasi telah direset ke kondisi awal.');
+                }
+            }
+        }
+
+        // Student App Link Management
+        function generateStudentAppLink() {
+            // Create a simple student app URL (you would replace this with actual URL)
+            const baseUrl = window.location.origin + window.location.pathname.replace('admin.html', '');
+            const studentAppUrl = baseUrl + 'student.html';
+            document.getElementById('studentAppUrl').value = studentAppUrl;
+        }
+
+        function copyStudentAppLink() {
+            const urlInput = document.getElementById('studentAppUrl');
+            urlInput.select();
+            urlInput.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                document.execCommand('copy');
+                alert('✅ Link aplikasi siswa berhasil disalin!\n\nBagikan link ini kepada siswa untuk melakukan voting.');
+            } catch (err) {
+                alert('❌ Gagal menyalin link. Silakan copy manual:\n\n' + urlInput.value);
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchVoted').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('#votedList > div');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fbd19b15e81e3f',t:'MTc1Nzk3ODA1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
