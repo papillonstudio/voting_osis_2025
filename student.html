@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#19183B">
+    <title>Voting OSIS 2025 - MA NU Demak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #19183B 0%, #708993 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .candidate-card { 
+            transition: all 0.3s ease; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        .candidate-card:hover, .candidate-card:active { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+        }
+        .vote-button { 
+            transition: all 0.3s ease; 
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .vote-button:hover, .vote-button:active { 
+            transform: scale(1.05); 
+        }
+        .mobile-optimized {
+            -webkit-overflow-scrolling: touch;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .touch-friendly {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .success-animation { animation: successPulse 0.6s ease-in-out; }
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .primary-bg { background-color: #19183B; }
+        .secondary-bg { background-color: #708993; }
+        .accent-bg { background-color: #A1C2BD; }
+        .light-bg { background-color: #E7F2EF; }
+        .neutral-bg { background-color: #F0F0F0; }
+        .primary-text { color: #19183B; }
+        .secondary-text { color: #708993; }
+        .accent-text { color: #A1C2BD; }
+        .hover-primary:hover { background-color: #0f0e2a; }
+        .hover-secondary:hover { background-color: #5a6f7a; }
+        .hover-accent:hover { background-color: #8bb0aa; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4 mobile-optimized">
+        <div class="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full card-shadow">
+            <div class="text-center mb-6">
+                <!-- Logo Sekolah -->
+                <div class="mb-4">
+                    <img id="schoolLogo" src="" alt="Logo MA NU Demak" class="w-20 h-20 mx-auto rounded-full object-cover shadow-lg" style="display: none;" onerror="this.style.display='none'; document.getElementById('defaultLogo').style.display='flex';">
+                    <div id="defaultLogo" class="w-20 h-20 primary-bg rounded-full flex items-center justify-center mx-auto shadow-lg">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h4M9 7h6m-6 4h6m-2 5h2M7 7h2v2H7V7zm0 4h2v2H7v-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <h1 class="text-2xl font-bold primary-text mb-1">Voting OSIS 2025</h1>
+                <h2 class="text-lg font-semibold secondary-text mb-2">MA NU Demak</h2>
+                <p class="text-gray-600">Pilih kandidat terbaik untuk OSIS periode 2025-2026</p>
+            </div>
+            
+            <form onsubmit="handleStudentLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium primary-text mb-2">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+                        </svg>
+                        ID Siswa
+                    </label>
+                    <input type="text" id="studentId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-friendly" placeholder="Masukkan ID siswa Anda" autocomplete="username" inputmode="text">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium primary-text mb-2">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z"/>
+                        </svg>
+                        Nama Lengkap
+                    </label>
+                    <input type="text" id="studentName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-friendly" placeholder="Masukkan nama lengkap Anda" autocomplete="name" inputmode="text">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium primary-text mb-2">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9L12 15L21 12.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                        </svg>
+                        Kelas
+                    </label>
+                    <select id="studentClass" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-friendly">
+                        <option value="">Pilih Kelas</option>
+                        <option value="X-A">X-A</option>
+                        <option value="X-B">X-B</option>
+                        <option value="X-C">X-C</option>
+                        <option value="XI-IPA-1">XI-IPA-1</option>
+                        <option value="XI-IPA-2">XI-IPA-2</option>
+                        <option value="XI-IPS-1">XI-IPS-1</option>
+                        <option value="XI-IPS-2">XI-IPS-2</option>
+                        <option value="XII-IPA-1">XII-IPA-1</option>
+                        <option value="XII-IPA-2">XII-IPA-2</option>
+                        <option value="XII-IPS-1">XII-IPS-1</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full primary-bg text-white py-3 px-6 rounded-lg font-medium hover-primary transition-colors flex items-center justify-center touch-friendly">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 17L15 12L10 7V10H4V14H10V17ZM21 3H3C1.9 3 1 3.9 1 5V19C1 20.1 1.9 21 3 21H21C22.1 21 23 20.1 23 19V5C23 3.9 22.1 3 21 3ZM21 19H3V5H21V19Z"/>
+                    </svg>
+                    Masuk ke Voting
+                </button>
+            </form>
+            
+            <div class="mt-6 p-4 light-bg rounded-lg">
+                <p class="text-sm primary-text text-center">
+                    <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11 9H13V7H11M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 17H13V11H11V17Z"/>
+                    </svg>
+                    Pastikan data yang Anda masukkan benar. Setiap siswa hanya dapat voting sekali.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voting Screen -->
+    <div id="votingScreen" class="min-h-screen p-3 sm:p-4 hidden mobile-optimized">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow mb-4 sm:mb-6">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 primary-bg rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17L4 12L5.41 10.59L9 14.17L18.59 4.58L20 6L9 17Z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold primary-text">Voting OSIS 2024</h1>
+                            <p class="text-sm secondary-text" id="studentInfo">Selamat datang!</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="secondary-bg text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover-secondary transition-colors flex items-center touch-friendly text-sm sm:text-base">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.59L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"/>
+                        </svg>
+                        Keluar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow mb-4 sm:mb-6">
+                <h2 class="text-base sm:text-lg font-semibold primary-text mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11 9H13V7H11M12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 17H13V11H11V17Z"/>
+                    </svg>
+                    Petunjuk Voting
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-6 h-6 accent-bg rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">1</span>
+                        </div>
+                        <span class="secondary-text">Baca profil setiap kandidat dengan teliti</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-6 h-6 accent-bg rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">2</span>
+                        </div>
+                        <span class="secondary-text">Pilih kandidat yang menurut Anda terbaik</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-6 h-6 accent-bg rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">3</span>
+                        </div>
+                        <span class="secondary-text">Konfirmasi pilihan Anda dengan klik "Vote"</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidates -->
+            <div id="candidatesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="min-h-screen flex items-center justify-center p-4 hidden mobile-optimized">
+        <div class="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full card-shadow text-center success-animation">
+            <div class="w-20 h-20 accent-bg rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
+                </svg>
+            </div>
+            
+            <h1 class="text-2xl font-bold primary-text mb-2">Voting Berhasil!</h1>
+            <p class="text-gray-600 mb-4">Terima kasih telah berpartisipasi dalam pemilihan OSIS 2024</p>
+            
+            <div id="voteConfirmation" class="p-4 light-bg rounded-lg mb-6">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="showResults()" class="w-full primary-bg text-white py-3 px-6 rounded-lg font-medium hover-primary transition-colors flex items-center justify-center touch-friendly">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M22 21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                    </svg>
+                    Lihat Hasil Sementara
+                </button>
+                
+                <button onclick="logout()" class="w-full secondary-bg text-white py-3 px-6 rounded-lg font-medium hover-secondary transition-colors flex items-center justify-center touch-friendly">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.59L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"/>
+                    </svg>
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="min-h-screen p-3 sm:p-4 hidden mobile-optimized">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow mb-4 sm:mb-6">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 accent-bg rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg sm:text-xl font-bold primary-text">Hasil Voting Sementara</h1>
+                            <p class="text-xs sm:text-sm secondary-text">Data diperbarui real-time</p>
+                        </div>
+                    </div>
+                    <button onclick="refreshResults()" class="primary-bg text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover-primary transition-colors flex items-center touch-friendly text-sm">
+                        <svg class="w-4 h-4 mr-1 sm:mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 4V1L8 5L12 9V6C15.31 6 18 8.69 18 12C18 13.01 17.75 13.97 17.3 14.8L18.76 16.26C19.54 15.03 20 13.57 20 12C20 7.58 16.42 4 12 4ZM12 18C8.69 18 6 15.31 6 12C6 10.99 6.25 10.03 6.7 9.2L5.24 7.74C4.46 8.97 4 10.43 4 12C4 16.42 7.58 20 12 20V23L16 19L12 15V18Z"/>
+                        </svg>
+                        <span class="hidden sm:inline">Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="bg-white rounded-2xl p-4 sm:p-6 card-shadow mb-4 sm:mb-6">
+                <div id="resultsContainer" class="space-y-3 sm:space-y-4">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                
+                <div class="mt-4 sm:mt-6 p-3 sm:p-4 neutral-bg rounded-lg">
+                    <div class="grid grid-cols-2 gap-3 sm:gap-4 text-center">
+                        <div>
+                            <p class="text-xl sm:text-2xl font-bold primary-text" id="totalVotesResult">0</p>
+                            <p class="text-xs sm:text-sm secondary-text">Total Suara</p>
+                        </div>
+                        <div>
+                            <p class="text-xl sm:text-2xl font-bold primary-text" id="participationRateResult">0%</p>
+                            <p class="text-xs sm:text-sm secondary-text">Tingkat Partisipasi</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <div class="text-center">
+                <button onclick="backToSuccess()" class="secondary-bg text-white px-4 sm:px-6 py-3 rounded-lg font-medium hover-secondary transition-colors flex items-center mx-auto touch-friendly">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"/>
+                    </svg>
+                    Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStudent = null;
+        let candidatesData = [];
+        let voteCounts = {};
+        let masterStudents = [];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchoolLogo();
+            loadCandidatesData();
+            loadVotingData();
+        });
+
+        function loadSchoolLogo() {
+            const savedLogo = localStorage.getItem('schoolLogo');
+            if (savedLogo) {
+                document.getElementById('schoolLogo').src = savedLogo;
+                document.getElementById('schoolLogo').style.display = 'block';
+                document.getElementById('defaultLogo').style.display = 'none';
+            }
+        }
+
+        function loadCandidatesData() {
+            candidatesData = JSON.parse(localStorage.getItem('candidatesData') || JSON.stringify([
+                {
+                    id: 1,
+                    name: 'Ahmad Rizki',
+                    class: 'XI-IPA-1',
+                    vision: 'Mewujudkan OSIS yang inovatif, kreatif, dan berprestasi untuk kemajuan sekolah.',
+                    mission: ['Meningkatkan kegiatan ekstrakurikuler', 'Mengadakan event kreatif bulanan', 'Memperkuat komunikasi antar siswa'],
+                    color: 'primary',
+                    photo: ''
+                },
+                {
+                    id: 2,
+                    name: 'Sari Putri',
+                    class: 'XI-IPS-1',
+                    vision: 'Membangun OSIS yang peduli lingkungan dan mengutamakan kesejahteraan siswa.',
+                    mission: ['Program sekolah hijau', 'Kantin sehat dan terjangkau', 'Fasilitas belajar yang nyaman'],
+                    color: 'secondary',
+                    photo: ''
+                },
+                {
+                    id: 3,
+                    name: 'Doni Firmansyah',
+                    class: 'XII-IPA-2',
+                    vision: 'OSIS yang modern, teknologi-savvy, dan siap menghadapi tantangan masa depan.',
+                    mission: ['Digitalisasi kegiatan OSIS', 'Workshop teknologi rutin', 'Kompetisi coding dan robotik'],
+                    color: 'accent',
+                    photo: ''
+                }
+            ]));
+        }
+
+        function loadVotingData() {
+            voteCounts = JSON.parse(localStorage.getItem('voteCounts') || '{}');
+            masterStudents = JSON.parse(localStorage.getItem('masterStudents') || '[]');
+            
+            // Initialize vote counts for all candidates
+            candidatesData.forEach(candidate => {
+                if (!voteCounts[candidate.id]) {
+                    voteCounts[candidate.id] = 0;
+                }
+            });
+        }
+
+        function getColorClasses(color) {
+            const colorMap = {
+                primary: { 
+                    bg: 'primary-bg', 
+                    hover: 'hover-primary', 
+                    light: 'bg-gray-100', 
+                    text: 'primary-text', 
+                    gradient: 'from-gray-700 to-gray-900',
+                    bgColor: '#19183B'
+                },
+                secondary: { 
+                    bg: 'secondary-bg', 
+                    hover: 'hover-secondary', 
+                    light: 'bg-gray-100', 
+                    text: 'secondary-text', 
+                    gradient: 'from-gray-500 to-gray-700',
+                    bgColor: '#708993'
+                },
+                accent: { 
+                    bg: 'accent-bg', 
+                    hover: 'hover-accent', 
+                    light: 'light-bg', 
+                    text: 'accent-text', 
+                    gradient: 'from-teal-400 to-teal-600',
+                    bgColor: '#A1C2BD'
+                },
+                light: { 
+                    bg: 'light-bg', 
+                    hover: 'hover:bg-green-100', 
+                    light: 'light-bg', 
+                    text: 'text-green-700', 
+                    gradient: 'from-green-200 to-green-400',
+                    bgColor: '#E7F2EF'
+                },
+                neutral: { 
+                    bg: 'neutral-bg', 
+                    hover: 'hover:bg-gray-200', 
+                    light: 'neutral-bg', 
+                    text: 'text-gray-700', 
+                    gradient: 'from-gray-300 to-gray-500',
+                    bgColor: '#F0F0F0'
+                }
+            };
+            return colorMap[color] || colorMap.primary;
+        }
+
+        function handleStudentLogin(event) {
+            event.preventDefault();
+            
+            const studentId = document.getElementById('studentId').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            const studentClass = document.getElementById('studentClass').value;
+            
+            // Check if student already voted
+            const existingStudent = masterStudents.find(s => s.id === studentId);
+            if (existingStudent && existingStudent.hasVoted) {
+                alert(`❌ Anda sudah melakukan voting!\n\nID: ${studentId}\nNama: ${existingStudent.name}\nPilihan: ${existingStudent.votedFor}\nWaktu: ${existingStudent.voteTime}`);
+                return;
+            }
+            
+            // Create or update student record
+            currentStudent = {
+                id: studentId,
+                name: studentName,
+                class: studentClass,
+                hasVoted: false
+            };
+            
+            // Add to master students if not exists
+            if (!existingStudent) {
+                masterStudents.push(currentStudent);
+                localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+            } else {
+                // Update existing student info
+                existingStudent.name = studentName;
+                existingStudent.class = studentClass;
+                currentStudent = existingStudent;
+                localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+            }
+            
+            // Show voting screen
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('votingScreen').classList.remove('hidden');
+            
+            // Update student info
+            document.getElementById('studentInfo').textContent = `${studentName} - ${studentClass}`;
+            
+            // Render candidates
+            renderCandidates();
+        }
+
+        function renderCandidates() {
+            const container = document.getElementById('candidatesContainer');
+            container.innerHTML = '';
+            
+            candidatesData.forEach(candidate => {
+                const colors = getColorClasses(candidate.color);
+                const initials = candidate.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                
+                const candidateDiv = document.createElement('div');
+                candidateDiv.className = 'bg-white rounded-2xl p-6 card-shadow candidate-card';
+                
+                candidateDiv.innerHTML = `
+                    <div class="text-center mb-4">
+                        ${candidate.photo ? 
+                            `<img src="${candidate.photo}" alt="${candidate.name}" class="w-20 h-20 rounded-full object-cover mx-auto mb-3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                             <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3" style="display: none; background-color: ${colors.bgColor};">
+                                <span class="text-xl font-bold text-white">${initials}</span>
+                             </div>` :
+                            `<div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3" style="background-color: ${colors.bgColor};">
+                                <span class="text-xl font-bold text-white">${initials}</span>
+                             </div>`
+                        }
+                        
+                        <div class="w-12 h-12 ${colors.bg} rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white text-xl font-bold">${candidate.id}</span>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold primary-text">${candidate.name}</h3>
+                        <p class="text-sm ${colors.text} font-medium">${candidate.class}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-semibold primary-text mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
+                            </svg>
+                            Visi:
+                        </h4>
+                        <p class="text-sm text-gray-600">${candidate.vision}</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-semibold primary-text mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
+                            </svg>
+                            Misi:
+                        </h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            ${candidate.mission.map(m => `<li class="flex items-start"><span class="w-1.5 h-1.5 ${colors.bg} rounded-full mt-2 mr-2 flex-shrink-0"></span>${m}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <button onclick="confirmVote(${candidate.id})" class="w-full ${colors.bg} text-white py-3 px-6 rounded-lg font-medium ${colors.hover} transition-colors vote-button flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17L4 12L5.41 10.59L9 14.17L18.59 4.58L20 6L9 17Z"/>
+                        </svg>
+                        Vote untuk ${candidate.name}
+                    </button>
+                `;
+                
+                container.appendChild(candidateDiv);
+            });
+        }
+
+        function confirmVote(candidateId) {
+            const candidate = candidatesData.find(c => c.id === candidateId);
+            if (!candidate) return;
+            
+            if (confirm(`🗳️ Konfirmasi Pilihan Anda\n\nAnda akan memilih:\n${candidate.name} - Kandidat #${candidate.id}\n\n⚠️ Pilihan tidak dapat diubah setelah dikonfirmasi.\n\nLanjutkan voting?`)) {
+                submitVote(candidateId);
+            }
+        }
+
+        function submitVote(candidateId) {
+            const candidate = candidatesData.find(c => c.id === candidateId);
+            if (!candidate || !currentStudent) return;
+            
+            // Update vote counts
+            voteCounts[candidateId] = (voteCounts[candidateId] || 0) + 1;
+            
+            // Update student record
+            currentStudent.hasVoted = true;
+            currentStudent.votedFor = candidate.name;
+            currentStudent.voteTime = new Date().toLocaleString('id-ID');
+            
+            // Update master students
+            const studentIndex = masterStudents.findIndex(s => s.id === currentStudent.id);
+            if (studentIndex !== -1) {
+                masterStudents[studentIndex] = currentStudent;
+            }
+            
+            // Save voting data
+            const votingData = JSON.parse(localStorage.getItem('votingData') || '[]');
+            votingData.push({
+                timestamp: new Date().toLocaleString('id-ID'),
+                studentId: currentStudent.id,
+                studentName: currentStudent.name,
+                studentClass: currentStudent.class,
+                candidateId: candidateId,
+                candidateName: candidate.name
+            });
+            
+            // Update voted users list
+            const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
+            if (!votedUsers.includes(currentStudent.id)) {
+                votedUsers.push(currentStudent.id);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('voteCounts', JSON.stringify(voteCounts));
+            localStorage.setItem('masterStudents', JSON.stringify(masterStudents));
+            localStorage.setItem('votingData', JSON.stringify(votingData));
+            localStorage.setItem('votedUsers', JSON.stringify(votedUsers));
+            
+            // Show success screen
+            showSuccessScreen(candidate);
+        }
+
+        function showSuccessScreen(candidate) {
+            document.getElementById('votingScreen').classList.add('hidden');
+            document.getElementById('successScreen').classList.remove('hidden');
+            
+            // Update confirmation details
+            const confirmationDiv = document.getElementById('voteConfirmation');
+            confirmationDiv.innerHTML = `
+                <div class="text-center">
+                    <p class="font-semibold primary-text mb-1">Pilihan Anda:</p>
+                    <p class="text-lg font-bold secondary-text">${candidate.name}</p>
+                    <p class="text-sm text-gray-600">Kandidat #${candidate.id}</p>
+                    <p class="text-xs text-gray-500 mt-2">${new Date().toLocaleString('id-ID')}</p>
+                </div>
+            `;
+        }
+
+        function showResults() {
+            document.getElementById('successScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            updateResults();
+        }
+
+        function backToSuccess() {
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('successScreen').classList.remove('hidden');
+        }
+
+        function refreshResults() {
+            // Reload data from localStorage
+            loadVotingData();
+            updateResults();
+        }
+
+        function updateResults() {
+            const total = Object.values(voteCounts).reduce((a, b) => a + b, 0);
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            // Clear and rebuild results
+            resultsContainer.innerHTML = '';
+            
+            candidatesData.forEach(candidate => {
+                const colors = getColorClasses(candidate.color);
+                const votes = voteCounts[candidate.id] || 0;
+                const percentage = total > 0 ? (votes / total) * 100 : 0;
+                const initials = candidate.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 ${colors.light} rounded-lg space-y-3 sm:space-y-0`;
+                
+                resultDiv.innerHTML = `
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center" style="background-color: ${colors.bgColor};">
+                            <span class="text-white font-bold text-sm sm:text-base">${initials}</span>
+                        </div>
+                        <div class="flex-1">
+                            <span class="font-medium text-base sm:text-lg primary-text block">${candidate.name}</span>
+                            <span class="text-xs sm:text-sm text-gray-500">${votes} suara (${percentage.toFixed(1)}%)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="flex-1 sm:w-24 lg:w-32 bg-gray-200 rounded-full h-2 sm:h-3">
+                            <div class="h-2 sm:h-3 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${colors.bgColor};"></div>
+                        </div>
+                        <span class="font-bold text-lg sm:text-xl min-w-[40px] sm:min-w-[60px] ${colors.text} text-right">${votes}</span>
+                    </div>
+                `;
+                
+                resultsContainer.appendChild(resultDiv);
+            });
+            
+            // Update totals
+            document.getElementById('totalVotesResult').textContent = total;
+            
+            const totalStudents = masterStudents.length;
+            const participationRate = totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0;
+            document.getElementById('participationRateResult').textContent = participationRate + '%';
+        }
+
+        function logout() {
+            if (confirm('Yakin ingin keluar dari aplikasi voting?')) {
+                // Reset current student
+                currentStudent = null;
+                
+                // Show login screen
+                document.getElementById('votingScreen').classList.add('hidden');
+                document.getElementById('successScreen').classList.add('hidden');
+                document.getElementById('resultsScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                
+                // Clear form
+                document.getElementById('studentId').value = '';
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentClass').value = '';
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fd6d0e1670fc0c',t:'MTc1Nzk5NDkwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
